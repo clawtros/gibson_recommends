@@ -81,19 +81,19 @@
   <body> 
     <div id="map_canvas" style="width:100%; height:100%"></div>
     <div id="content">
-      {% block content %}
-      <ol>
-        {% for place in places %}
-        <li><span onclick="google.maps.event.trigger(markers[{{place.id}}], 'click')" style="cursor:pointer">{{ place.name }}</span> {% for tag in place.tags %}<a class="button_tag" href="/recommender/?tag={{tag}}">{{ tag }}</a>{% endfor %}</li>
-        {% endfor %}
-      </ol>
-      <hr noshade height="2">
       <div id="cloud">
       {% for tag in cloud %}
       <span style="font-size: {{ tag.font_size }}em"><a class="cloud_link" href="/recommender/?tag={{tag}}">{{tag}}</a></span>
       {% endfor %}
       <a href="/recommender/" style="font-size:2em;color:#f33;" class="cloud_link">All</a>
       </div>
+      <hr noshade height="2">
+      {% block content %}
+      <ol>
+        {% for place in places %}
+        <li><span onclick="google.maps.event.trigger(markers[{{place.id}}], 'click')" style="cursor:pointer">{{ place.name }}</span> {% for tag in place.tags %}<a class="button_tag" href="/recommender/?tag={{tag}}">{{ tag }}</a>{% endfor %}</li>
+        {% endfor %}
+      </ol>
       {% endblock %}
 
     </div>
