@@ -46,9 +46,7 @@
           width:100%;
           border-top: 1px solid #ccc;
       }
-    </style>
-    
-    
+    </style>    
   </head>
   <body> 
     <div id="map_canvas" style="width:100%; height:100%"></div>
@@ -63,8 +61,6 @@
       {% for tag in cloud %}
       <span style="font-size: {{ tag.font_size }}em"><a href="/recommender/?tag={{tag}}">{{tag}}</a></span>
       {% endfor %}
-      <hr noshade height="2">
-      <a style="font-size:150%;margin-top:auto;" href="{% url goodplaces.views.add_place%}">Add a good place</a><br>
       {% endblock %}
     </div>
   </body>
@@ -90,7 +86,7 @@
         var marker = new google.maps.Marker(opts);
 
         var infowindow = new google.maps.InfoWindow({
-            content: '<h1>'+place.name+'</h1>'+ place.address + '<p>' + place.description + '</p><a href="/recommender/place/edit/'+place.id+'/">edit</a>'
+            content: '<h1>'+place.name+'</h1>'+ place.address + '<p>' + place.description + '</p>'
         });
 
         google.maps.event.addListener(marker, 'click', function() {
