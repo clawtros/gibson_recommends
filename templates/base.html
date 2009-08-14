@@ -18,8 +18,8 @@
           width:95%;
 
       }
-#cloud {
-        font-size:50%;
+      #cloud {
+          font-size:50%;
       }
       .cloud_link {
           text-decoration:none;
@@ -43,9 +43,9 @@
           margin-bottom:-24px;
           height:24px;
       }
-#toggler:hover {
-  background-color:rgba(255,255,117, 0.4);
-}
+      #toggler:hover {
+          background-color:rgba(255,255,117, 0.4);
+      }
       #content {
           overflow-x:hidden;
           overflow-y:auto;
@@ -76,27 +76,39 @@
           padding-left:3px;
           padding-right:3px;
       }
+      .address {
+          color:#777;
+      }
+      .description {
+          color:#333;
+      }
     </style>    
   </head>
   <body> 
     <div id="map_canvas" style="width:100%; height:100%"></div>
     <div id="content">
       <div id="cloud">
-      {% for tag in cloud %}
-      <span style="font-size: {{ tag.font_size }}em"><a class="cloud_link" href="/recommender/?tag={{tag}}">{{tag}}</a></span>
-      {% endfor %}
-      <a href="/recommender/" style="font-size:2em;color:#f33;" class="cloud_link">All</a>
+        {% for tag in cloud %}
+        <span style="font-size: {{ tag.font_size }}em"><a class="cloud_link" href="/recommender/?tag={{tag}}">{{tag}}</a></span>
+        {% endfor %}
+        <a href="/recommender/" style="font-size:2em;color:#f33;" class="cloud_link">All</a>
       </div>
       <hr noshade height="2">
-      {% block content %}
-      <ol>
-        {% for place in places %}
-        <li><span onclick="google.maps.event.trigger(markers[{{place.id}}], 'click')" style="cursor:pointer">{{ place.name }}</span> {% for tag in place.tags %}<a class="button_tag" href="/recommender/?tag={{tag}}">{{ tag }}</a>{% endfor %}</li>
-        {% endfor %}
-      </ol>
-      {% endblock %}
-      <div style="height:30px;"></div>
-    </div>
+        {% block content %}
+        <ol>
+          {% for place in places %}
+          <li>
+          <span onclick="google.maps.event.trigger(markers[{{place.id}}], 'click')" style="cursor:pointer">
+          {{ place.name }}
+          </span> {% for tag in place.tags %}
+          <a class="button_tag" href="/recommender/?tag={{tag}}">{{ tag }}</a>{% endfor %}
+          
+        </li>
+          {% endfor %}
+        </ol>
+        {% endblock %}
+        <div style="height:30px;"></div>
+      </div>
     <div id="toggler" onclick="toggle_content()">TOGGLE SIDEBAR</div>
   </body>
  <script src="http://www.google.com/jsapi"></script> 
@@ -116,7 +128,9 @@
 
 map = new google.maps.Map(document.getElementById("map_canvas"), options);
 map.fitBounds(new google.maps.LatLngBounds(new google.maps.LatLng({{ min_lat }}, {{ min_lng }}),
-                                           new google.maps.LatLng({{ max_lat }}, {{ max_lng }})))  
+                                           new google.maps.LatLng({{ max_lat }}, {{ max_lng }})
+                                           
+                                           ))  
 var markers = {}
 var infowindows = {}
 
@@ -125,7 +139,7 @@ function add_marker(opts, place) {
   marker.place_id = place.id;
   markers[place.id] = marker;
   var infowindow = new google.maps.InfoWindow({
-    content: '<h1>'+place.name+'</h1>'+ place.address + '<p>' + place.description + '</p>'
+    content: '<h1>'+place.name+'</h1><span class="address">'+ place.address + '</span><p class="description">' + place.description + '</p>'
   });
   
   infowindows[place.id] = infowindow;
