@@ -1,0 +1,122 @@
+{% load map_tags %}
+<html>
+  <head>
+    <title>MAP FUN</title>
+    <style type="text/css">
+      body {
+          font-family : Futura, Helvetica, Arial, sans;
+          height:100%;
+      }
+      * {
+          padding:0px;
+          margin:0px;
+      }
+      input, label, textarea,select {
+          margin:0px 0px 10px 10px;
+      }
+      input, textarea {
+          width:95%;
+
+      }
+      input {
+          background-color:transparent;
+          font-size: 24pt;
+          font-face: courier;
+          border: 0px;
+          border-bottom: 1px dashed #ccc;
+      }
+      #content {
+          overflow-x:hidden;
+          overflow-y:auto;
+          background-color:rgba(255,255,255,0.6);
+          z-index:10;
+          position:absolute;
+          top:0px;
+          left:0px;
+          width:350px;
+          height:100%;
+      }
+      label {
+          display:block;
+          clear:both;
+          font-size:83%;
+          width:100px;
+      }
+      li {
+          width:100%;
+          border-top: 1px solid #ccc;
+      }
+    </style>
+    
+    
+  </head>
+  <body> 
+    <div id="map_canvas" style="width:100%; height:100%"></div>
+    <div id="content">
+      {% block content %}
+      <ol>
+        {% for place in places %}
+        <li>{{ place.name }} {% for tag in place.tags %}<a style="font-size:83%;border:1px solid #ccc;background-color:black;color:white;text-decoration:none;padding-left:3px;padding-right:3px;" href="/recommender/?tag={{tag}}">{{ tag }}</a>{% endfor %}</li>
+        {% endfor %}
+      </ol>
+      <hr noshade height="2">
+      {% for tag in cloud %}
+      <span style="font-size: {{ tag.font_size }}em"><a href="/recommender/?tag={{tag}}">{{tag}}</a></span>
+      {% endfor %}
+      <hr noshade height="2">
+      <a style="font-size:150%;margin-top:auto;" href="{% url goodplaces.views.add_place%}">Add a good place</a><br>
+      {% endblock %}
+    </div>
+  </body>
+ <script src="http://www.google.com/jsapi"></script> 
+  <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
+  <script type="text/javascript">
+	google.load('jquery','1');
+    var map = null;
+    var latlng = new google.maps.LatLng({{ avg_lat|mapformat }}, {{ avg_lng|mapformat }});
+    var options = {
+        zoom: 13,
+        center: latlng,
+	mapTypeControl: true,
+    mapTypeControlOptions: {style: google.maps.MapTypeControlStyle.DROPDOWN_MENU},
+    navigationControl: true,
+    navigationControlOptions: {style: google.maps.NavigationControlStyle.ZOOM_PAN},
+    
+    mapTypeId: google.maps.MapTypeId.HYBRID
+    };
+    map = new google.maps.Map(document.getElementById("map_canvas"), options);
+
+    function add_marker(opts, place) {
+        var marker = new google.maps.Marker(opts);
+
+        var infowindow = new google.maps.InfoWindow({
+            content: '<h1>'+place.name+'</h1>'+ place.address + '<p>' + place.description + '</p><a href="/recommender/place/edit/'+place.id+'/">edit</a>'
+        });
+
+        google.maps.event.addListener(marker, 'click', function() {
+            infowindow.open(map,marker);
+        });
+
+    }
+    
+    {% for place in places %}
+    add_marker({
+        position: new google.maps.LatLng({{ place.lat }}, {{ place.lng }}),
+        title:'{{ place.name }} - {{ place.address}}',
+        map:map
+    },{
+        id : "{{ place.id }}",
+        name : "{{ place.name }}",
+        address : "{{ place.address}}",
+        description : "{{ place.description }}",
+    });
+
+    {% endfor %}
+	document.onkeyup = function (e) {
+           if (e.keyCode == 16) {
+		$("#content").slideToggle('fast');
+	   }	
+	}
+    </script>
+
+</html>
