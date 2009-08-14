@@ -1,7 +1,7 @@
 {% load map_tags %}
 <html>
   <head>
-    <title>MAP FUN</title>
+    <title>Gibson Recommends!</title>
     <style type="text/css">
       body {
           font-family : Futura, Helvetica, Arial, sans;
@@ -19,8 +19,8 @@
 
       }
 #cloud {
-  font-size:50%;
-}
+        font-size:50%;
+      }
       .cloud_link {
           text-decoration:none;
       }
@@ -30,6 +30,17 @@
           font-face: courier;
           border: 0px;
           border-bottom: 1px dashed #ccc;
+      }
+      #toggler {
+          background-color:rgba(255,255,255,0.6);
+          z-index:100;
+          position:absolute;
+          bottom:24px;
+          font-size:18px;
+          left:0px;
+          width:350px;
+          margin-bottom:-24px;
+          height:24px;
       }
       #content {
           overflow-x:hidden;
@@ -81,7 +92,9 @@
       <a href="/recommender/">Reset</a>
       </div>
       {% endblock %}
+
     </div>
+    <div id="toggler" onclick="toggle_content()">TOGGLE SIDEBAR</div>
   </body>
  <script src="http://www.google.com/jsapi"></script> 
   <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
@@ -90,8 +103,6 @@
   var map = null;
   var latlng = new google.maps.LatLng({{ avg_lat|mapformat }}, {{ avg_lng|mapformat }});
   var options = {
-  zoom: 13,
-  center: latlng,
   mapTypeControl: true,
   mapTypeControlOptions: {style: google.maps.MapTypeControlStyle.DROPDOWN_MENU},
   navigationControl: true,
@@ -101,7 +112,8 @@
 };
 
 map = new google.maps.Map(document.getElementById("map_canvas"), options);
-
+map.fitBounds(new google.maps.LatLngBounds(new google.maps.LatLng({{ min_lat }}, {{ min_lng }}),
+                                           new google.maps.LatLng({{ max_lat }}, {{ max_lng }})))  
 var markers = {}
 var infowindows = {}
 
@@ -138,10 +150,16 @@ function add_marker(opts, place) {
     });
 
     {% endfor %}
-	document.onkeyup = function (e) {
-           if (e.keyCode == 16) {
-		$("#content").slideToggle('fast');
-	   }	
+google.setOnLoadCallback(function() {
+
+  jQuery.fn.fadeToggle = function(speed, easing, callback) {
+     return this.animate({opacity: 'toggle'}, speed, easing, callback);
+
+}; 
+
+});
+    function toggle_content() {
+      $("#content").fadeToggle('fast');
 	}
     </script>
 
