@@ -18,6 +18,12 @@
           width:95%;
 
       }
+#cloud {
+  font-size:50%;
+}
+      .cloud_link {
+          text-decoration:none;
+      }
       input {
           background-color:transparent;
           font-size: 24pt;
@@ -46,6 +52,15 @@
           width:100%;
           border-top: 1px solid #ccc;
       }
+      .button_tag {
+          font-size:83%;
+          border:1px solid #ccc;
+          background-color:black;
+          color:white;
+          text-decoration:none;
+          padding-left:3px;
+          padding-right:3px;
+      }
     </style>    
   </head>
   <body> 
@@ -54,13 +69,17 @@
       {% block content %}
       <ol>
         {% for place in places %}
-        <li><span onclick="google.maps.event.trigger(markers[{{place.id}}], 'click')" style="cursor:pointer">{{ place.name }}</span> {% for tag in place.tags %}<a style="font-size:83%;border:1px solid #ccc;background-color:black;color:white;text-decoration:none;padding-left:3px;padding-right:3px;" href="/recommender/?tag={{tag}}">{{ tag }}</a>{% endfor %}</li>
+        <li><span onclick="google.maps.event.trigger(markers[{{place.id}}], 'click')" style="cursor:pointer">{{ place.name }}</span> {% for tag in place.tags %}<a class="button_tag" href="/recommender/?tag={{tag}}">{{ tag }}</a>{% endfor %}</li>
         {% endfor %}
       </ol>
       <hr noshade height="2">
+      <div id="cloud">
       {% for tag in cloud %}
-      <span style="font-size: {{ tag.font_size }}em"><a href="/recommender/?tag={{tag}}">{{tag}}</a></span>
+      <span style="font-size: {{ tag.font_size }}em"><a class="cloud_link" href="/recommender/?tag={{tag}}">{{tag}}</a></span>
       {% endfor %}
+      <br>
+      <a href="/recommender/">Reset</a>
+      </div>
       {% endblock %}
     </div>
   </body>
@@ -84,16 +103,24 @@
 map = new google.maps.Map(document.getElementById("map_canvas"), options);
 
 var markers = {}
+var infowindows = {}
 
 function add_marker(opts, place) {
   var marker = new google.maps.Marker(opts);
+  marker.place_id = place.id;
   markers[place.id] = marker;
   var infowindow = new google.maps.InfoWindow({
     content: '<h1>'+place.name+'</h1>'+ place.address + '<p>' + place.description + '</p>'
   });
   
+  infowindows[place.id] = infowindow;
+
   google.maps.event.addListener(marker, 'click', function() {
-    infowindow.open(map,marker);
+    
+    for (infowindow in infowindows) {
+      infowindows[infowindow].close();
+    }
+    infowindows[marker.place_id].open(map,marker);
   });
 
     }
