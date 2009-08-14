@@ -32,6 +32,7 @@
           border-bottom: 1px dashed #ccc;
       }
       #toggler {
+          cursor:pointer;
           background-color:rgba(255,255,255,0.6);
           z-index:100;
           position:absolute;
@@ -42,6 +43,9 @@
           margin-bottom:-24px;
           height:24px;
       }
+#toggler:hover {
+  background-color:rgba(255,255,117, 0.4);
+}
       #content {
           overflow-x:hidden;
           overflow-y:auto;
@@ -88,8 +92,7 @@
       {% for tag in cloud %}
       <span style="font-size: {{ tag.font_size }}em"><a class="cloud_link" href="/recommender/?tag={{tag}}">{{tag}}</a></span>
       {% endfor %}
-      <br>
-      <a href="/recommender/">Reset</a>
+      <a href="/recommender/" style="font-size:2em;color:#f33;" class="cloud_link">All</a>
       </div>
       {% endblock %}
 
