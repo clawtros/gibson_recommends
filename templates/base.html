@@ -54,7 +54,7 @@
       {% block content %}
       <ol>
         {% for place in places %}
-        <li>{{ place.name }} {% for tag in place.tags %}<a style="font-size:83%;border:1px solid #ccc;background-color:black;color:white;text-decoration:none;padding-left:3px;padding-right:3px;" href="/recommender/?tag={{tag}}">{{ tag }}</a>{% endfor %}</li>
+        <li><span onclick="google.maps.event.trigger(markers[{{place.id}}], 'click')">{{ place.name }}</span> {% for tag in place.tags %}<a style="font-size:83%;border:1px solid #ccc;background-color:black;color:white;text-decoration:none;padding-left:3px;padding-right:3px;" href="/recommender/?tag={{tag}}">{{ tag }}</a>{% endfor %}</li>
         {% endfor %}
       </ol>
       <hr noshade height="2">
@@ -65,33 +65,36 @@
     </div>
   </body>
  <script src="http://www.google.com/jsapi"></script> 
-  <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
+  <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
   <script type="text/javascript">
-	google.load('jquery','1');
-    var map = null;
-    var latlng = new google.maps.LatLng({{ avg_lat|mapformat }}, {{ avg_lng|mapformat }});
-    var options = {
-        zoom: 13,
-        center: latlng,
-	mapTypeControl: true,
-    mapTypeControlOptions: {style: google.maps.MapTypeControlStyle.DROPDOWN_MENU},
-    navigationControl: true,
-    navigationControlOptions: {style: google.maps.NavigationControlStyle.ZOOM_PAN},
-    
-    mapTypeId: google.maps.MapTypeId.HYBRID
-    };
-    map = new google.maps.Map(document.getElementById("map_canvas"), options);
+  google.load('jquery','1');
+  var map = null;
+  var latlng = new google.maps.LatLng({{ avg_lat|mapformat }}, {{ avg_lng|mapformat }});
+  var options = {
+  zoom: 13,
+  center: latlng,
+  mapTypeControl: true,
+  mapTypeControlOptions: {style: google.maps.MapTypeControlStyle.DROPDOWN_MENU},
+  navigationControl: true,
+  navigationControlOptions: {style: google.maps.NavigationControlStyle.ZOOM_PAN},
+  
+  mapTypeId: google.maps.MapTypeId.HYBRID
+};
 
-    function add_marker(opts, place) {
-        var marker = new google.maps.Marker(opts);
+map = new google.maps.Map(document.getElementById("map_canvas"), options);
 
-        var infowindow = new google.maps.InfoWindow({
-            content: '<h1>'+place.name+'</h1>'+ place.address + '<p>' + place.description + '</p>'
-        });
+var markers = {}
 
-        google.maps.event.addListener(marker, 'click', function() {
-            infowindow.open(map,marker);
-        });
+function add_marker(opts, place) {
+  var marker = new google.maps.Marker(opts);
+  markers[place.id] = marker;
+  var infowindow = new google.maps.InfoWindow({
+    content: '<h1>'+place.name+'</h1>'+ place.address + '<p>' + place.description + '</p>'
+  });
+  
+  google.maps.event.addListener(marker, 'click', function() {
+    infowindow.open(map,marker);
+  });
 
     }
     
