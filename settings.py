@@ -2,6 +2,8 @@
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
+import os
+PROJECT_DIR = os.path.abspath(os.path.dirname(__file__))
 
 ADMINS = (
     # ('Your Name', 'your_email@domain.com'),
@@ -11,7 +13,7 @@ MANAGERS = ADMINS
 
 DATABASE_ENGINE = 'sqlite3'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
 #DATABASE_NAME = '/var/www/django/recommender/testdb'             # Or path to database file if using sqlite3.
-DATABASE_NAME = 'testdb'             # Or path to database file if using sqlite3.
+DATABASE_NAME = os.path.join(PROJECT_DIR,'testdb')             # Or path to database file if using sqlite3.
 DATABASE_USER = ''             # Not used with sqlite3.
 DATABASE_PASSWORD = ''         # Not used with sqlite3.
 DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
@@ -72,7 +74,7 @@ MIDDLEWARE_CLASSES = (
 ROOT_URLCONF = 'recommender.urls'
 
 TEMPLATE_DIRS = (
-    '/var/www/django/recommender/templates',
+    os.path.join(PROJECT_DIR, 'templates'),
 )
 
 MAPS_API_KEY="ABQIAAAA27YdNg8dK8HMTWQvDyHMvhQCULP4XOMyhPd8d_NrQQEO8sT8XBSJvifAcPYtgZs59yk4IweWRzheFg"
@@ -81,6 +83,7 @@ INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
+    'django.contrib.admin',
     'goodplaces',    
     'tagging',
 
