@@ -54,7 +54,7 @@
       {% block content %}
       <ol>
         {% for place in places %}
-        <li><span onclick="google.maps.event.trigger(markers[{{place.id}}], 'click')">{{ place.name }}</span> {% for tag in place.tags %}<a style="font-size:83%;border:1px solid #ccc;background-color:black;color:white;text-decoration:none;padding-left:3px;padding-right:3px;" href="/recommender/?tag={{tag}}">{{ tag }}</a>{% endfor %}</li>
+        <li><span onclick="google.maps.event.trigger(markers[{{place.id}}], 'click')" style="cursor:pointer">{{ place.name }}</span> {% for tag in place.tags %}<a style="font-size:83%;border:1px solid #ccc;background-color:black;color:white;text-decoration:none;padding-left:3px;padding-right:3px;" href="/recommender/?tag={{tag}}">{{ tag }}</a>{% endfor %}</li>
         {% endfor %}
       </ol>
       <hr noshade height="2">
